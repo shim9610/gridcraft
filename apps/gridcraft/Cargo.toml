@@ -30,6 +30,11 @@ arboard = { workspace = true }
 
 [target.'cfg(any(target_os = "linux", target_os = "freebsd"))'.dependencies]
 arboard = { workspace = true, features = ["wayland-data-control"] }
+# Wayland compositors without server-side decorations (GNOME) need the app to draw its own title
+# bar. eframe is built without default features, which drops winit's Adwaita frame, so winit falls
+# back to smithay-client-toolkit's placeholder frame (a solid square for close, a hollow one for
+# maximize). This line only turns the feature on for the winit eframe already uses.
+winit = { version = "0.30", default-features = false, features = ["wayland-csd-adwaita"] }
 
 [target.'cfg(target_os = "windows")'.dependencies]
 # Blocks on the start-up DirectX 12 adapter probe (`graphics.rs`); already in the tree via eframe.
